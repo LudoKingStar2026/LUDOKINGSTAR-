@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LudoKingStar</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f6fb;
+  color:#222;
+}
+
+header{
+  background:#111827;
+  color:white;
+  padding:16px;
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+}
+
+.container{
+  width:100%;
+  max-width:500px;
+  margin:25px auto;
+  padding:15px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.hidden{
+  display:none !important;
+}
+
+h2,h3{
+  margin-top:0;
+}
+
+label{
+  display:block;
+  margin-top:12px;
+  margin-bottom:6px;
+  font-weight:bold;
+}
+
+input{
+  width:100%;
+  padding:13px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:16px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#2563eb;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:10px;
+  padding:13px;
+  margin-top:14px;
+  background:#2563eb;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+button.secondary{
+  background:#374151;
+}
+
+button.danger{
+  background:#dc2626;
+}
+
+.msg{
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  background:#f3f4f6;
+  min-height:20px;
+}
+
+.success{
+  color:#15803d;
+}
+
+.error{
+  color:#dc2626;
+}
+
+.small{
+  font-size:13px;
+  color:#6b7280;
+}
+
+.balance{
+  font-size:32px;
+  font-weight:bold;
+  color:#16a34a;
+  margin:10px 0 15px;
+}
+
+.menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.menu button{
+  margin:0;
+}
+
+.game{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:10px;
+  background:#fafafa;
+}
+
+.ludo-board{
+  width:100%;
+  max-width:360px;
+  aspect-ratio:1/1;
+  margin:20px auto;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  grid-template-rows:repeat(6,1fr);
+  gap:3px;
+  background:#111827;
+  padding:3px;
+  border-radius:12px;
+}
+
+.cell{
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+  border-radius:4px;
+}
+
+.red{
+  background:#fecaca;
+}
+
+.green{
+  background:#bbf7d0;
+}
+
+.yellow{
+  background:#fef08a;
+}
+
+.blue{
+  background:#bfdbfe;
+}
+
+.center{
+  background:#e5e7eb;
+}
+
+.top-space{
+  margin-top:10px;
+}
+
+hr{
+  border:0;
+  border-top:1px solid #e5e7eb;
+  margin:18px 0;
+}
+
+.transaction{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.transaction:last-child{
+  border-bottom:0;
+}
+
+.credit{
+  color:#16a34a;
+  font-weight:bold;
+}
+
+.debit{
+  color:#dc2626;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  🎲 LudoKingStar
+</header>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="loginCard" class="card">
+    <h2>🔐 Login / Register</h2>
+
+    <label>Name</label>
+    <input
+      id="name"
+      type="text"
+      placeholder="अपना नाम लिखें"
+      autocomplete="name"
+    >
+
+    <label>Mobile Number</label>
+    <input
+      id="mobile"
+      type="tel"
+      inputmode="numeric"
+      maxlength="10"
+      placeholder="10 digit mobile number"
+      autocomplete="tel"
+    >
+
+    <button id="loginBtn" type="button" onclick="requestOTP()">
+      Login / Get OTP
+    </button>
+
+    <div id="loginMsg" class="msg"></div>
+  </div>
+
+  <!-- OTP -->
+  <div id="otpCard" class="card hidden">
+    <h2>📱 OTP Verification</h2>
+
+    <p class="small">
+      Demo OTP: <b>123456</b>
+    </p>
+
+    <label>OTP</label>
+    <input
+      id="otp"
+      type="tel"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="123456"
+    >
+
+    <button type="button" onclick="verifyOTP()">
+      Verify OTP
+    </button>
+
+    <button
+      type="button"
+      class="secondary"
+      onclick="backToLogin()"
+    >
+      Back
+    </button>
+
+    <div id="otpMsg" class="msg"></div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div id="panel" class="hidden">
+
+    <div class="card">
+      <h2>👤 User Panel</h2>
+
+      <div class="menu">
+        <button type="button" onclick="showSection('profileCard')">
+          👤 Profile
+        </button>
+
+        <button type="button" onclick="showSection('walletCard')">
+          💰 Wallet
+        </button>
+
+        <button type="button" onclick="showSection('gamesCard')">
+          🎮 Games
+        </button>
+
+        <button type="button" onclick="showSection('historyCard')">
+          📜 History
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="danger"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="profileCard" class="card hidden">
+      <h3>👤 Profile</h3>
+
+      <p>
+        <b>Name:</b>
+        <span id="profileName">-</span>
+      </p>
+
+      <p>
+        <b>Mobile:</b>
+        <span id="profileMobile">-</span>
+      </p>
+
+      <p>
+        <b>User ID:</b>
+        <span id="profileId">-</span>
+      </p>
+
+      <p>
+        <b>Status:</b>
+        <span id="profileStatus">-</span>
+      </p>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="closeSections()"
+      >
+        Close
+      </button>
+    </div>
+
+    <!-- WALLET -->
+    <div id="walletCard" class="card hidden">
+      <h3>💰 Wallet</h3>
+
+      <div class="small">Available Balance</div>
+
+      <div class="balance">
+        ₹<span id="walletBalance">0</span>
+      </div>
+
+      <hr>
+
+      <label>Add Money Amount</label>
+
+      <input
+        id="depositAmount"
+        type="number"
+        min="1"
+        placeholder="Amount जैसे 100"
+      >
+
+      <button
+        type="button"
+        onclick="depositMoney()"
+      >
+        ➕ Add Money
+      </button>
+
+      <label>Withdraw Amount</label>
+
+      <input
+        id="withdrawAmount"
+        type="number"
+        min="1"
+        placeholder="Amount जैसे 100"
+      >
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="withdrawMoney()"
+      >
+        ↗ Withdraw
+      </button>
+
+      <div id="walletMsg" class="msg"></div>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="closeSections()"
+      >
+        Close
+      </button>
+    </div>
+
+    <!-- GAMES -->
+    <div id="gamesCard" class="card hidden">
+      <h3>🎮 Games</h3>
+
+      <div class="game">
+        <b>🎲 Ludo Classic</b>
+        <br>
+        <span class="small">
+          2–4 Players • Demo
+        </span>
+
+        <button
+          type="button"
+          onclick="openLudo()"
+        >
+          ▶ Play Ludo Demo
+        </button>
+      </div>
+
+      <div class="game">
+        <b>🏆 Ludo Tournament</b>
+        <br>
+        <span class="small">
+          Coming Soon
+        </span>
+      </div>
+
+      <div class="game">
+        <b>⚡ Quick Match</b>
+        <br>
+        <span class="small">
+          Coming Soon
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="closeSections()"
+      >
+        Close
+      </button>
+    </div>
+
+    <!-- LUDO -->
+    <div id="ludoGameCard" class="card hidden">
+      <h3>🎲 Ludo Demo</h3>
+
+      <p>
+        Current Player:
+        <b id="ludoPlayer">Red</b>
+      </p>
+
+      <p>
+        Dice:
+        <b id="diceResult">-</b>
+      </p>
+
+      <div id="ludoBoard" class="ludo-board"></div>
+
+      <button
+        type="button"
+        onclick="rollDice()"
+      >
+        🎲 Roll Dice
+      </button>
+
+      <div id="ludoMsg" class="msg">
+        आपका turn है। Dice roll करें।
+      </div>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="closeSections()"
+      >
+        Close Game
+      </button>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="historyCard" class="card hidden">
+      <h3>📜 Transaction History</h3>
+
+      <button
+        type="button"
+        onclick="loadHistory()"
+      >
+        🔄 Refresh History
+      </button>
+
+      <div id="historyList" class="top-space">
+        Loading...
+      </div>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="closeSections()"
+      >
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const API =
+"https://ludokingstar-ludokingstar-backend-2026.onrender.com";
+
+let currentMobile = "";
+let currentName = "";
+
+let ludoCurrentPlayer = 0;
+
+const ludoPlayers = [
+  "Red",
+  "Green",
+  "Yellow",
+  "Blue"
+];
+
+/* -----------------------------
+   BASIC HELPERS
+----------------------------- */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function setMessage(id, text, type){
+  const el = $(id);
+
+  if(!el){
+    return;
+  }
+
+  el.textContent = text || "";
+
+  el.className = "msg";
+
+  if(type === "error"){
+    el.classList.add("error");
+  }
+
+  if(type === "success"){
+    el.classList.add("success");
+  }
+}
+
+function isValidMobile(mobile){
+  return /^[0-9]{10}$/.test(mobile);
+}
+
+/* -----------------------------
+   REQUEST OTP
+----------------------------- */
+
+async function requestOTP(){
+
+  const name =
+    $("name").value.trim();
+
+  const mobile =
+    $("mobile").value.trim();
+
+  if(!name){
+    setMessage(
+      "loginMsg",
+      "कृपया अपना नाम डालें।",
+      "error"
+    );
+    return;
+  }
+
+  if(!isValidMobile(mobile)){
+    setMessage(
+      "loginMsg",
+      "कृपया 10 digit mobile number डालें।",
+      "error"
+    );
+    return;
+  }
+
+  const btn =
+    $("loginBtn");
+
+  btn.disabled = true;
+  btn.textContent = "Please wait...";
+
+  setMessage(
+    "loginMsg",
+    "OTP भेजा जा रहा है..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/api/auth/request-otp",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            name:name,
+            mobile:mobile,
+            phone:mobile
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.msg ||
+        data.error ||
+        "OTP request failed"
+      );
+    }
+
+    currentName = name;
+    currentMobile = mobile;
+
+    $("loginCard")
+      .classList.add("hidden");
+
+    $("otpCard")
+      .classList.remove("hidden");
+
+    setMessage(
+      "otpMsg",
+      "OTP भेज दिया गया है। Demo में OTP 123456 है।",
+      "success"
+    );
+
+    $("otp").focus();
+
+  }catch(error){
+
+    setMessage(
+      "loginMsg",
+      "Login/OTP error: " +
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    btn.disabled = false;
+    btn.textContent = "Login / Get OTP";
+  }
+}
+
+/* -----------------------------
+   VERIFY OTP
+----------------------------- */
+
+async function verifyOTP(){
+
+  const otp =
+    $("otp").value.trim();
+
+  if(!/^[0-9]{6}$/.test(otp)){
+
+    setMessage(
+      "otpMsg",
+      "कृपया 6 digit OTP डालें।",
+      "error"
+    );
+
+    return;
+  }
+
+  setMessage(
+    "otpMsg",
+    "OTP verify हो रहा है..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/api/auth/verify-otp",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            name:currentName,
+            mobile:currentMobile,
+            phone:currentMobile,
+            otp:otp
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.msg ||
+        data.error ||
+        "OTP verification failed"
+      );
+    }
+
+    localStorage.setItem(
+      "ludo_mobile",
+      currentMobile
+    );
+
+    localStorage.setItem(
+      "ludo_name",
+      currentName
+    );
+
+    $("otpCard")
+      .classList.add("hidden");
+
+    $("panel")
+      .classList.remove("hidden");
+
+    setMessage(
+      "otpMsg",
+      ""
+    );
+
+    await loadUser();
+
+  }catch(error){
+
+    setMessage(
+      "otpMsg",
+      "OTP verification error: " +
+      error.message,
+      "error"
+    );
+  }
+}
+
+/* -----------------------------
+   BACK TO LOGIN
+----------------------------- */
+
+function backToLogin(){
+
+  $("otpCard")
+    .classList.add("hidden");
+
+  $("loginCard")
+    .classList.remove("hidden");
+
+  $("otp").value = "";
+
+  setMessage(
+    "otpMsg",
+    ""
+  );
+}
+
+/* -----------------------------
+   LOAD USER
+----------------------------- */
+
+async function loadUser(){
+
+  if(!currentMobile){
+    return;
+  }
+
+  try{
+
+    const response =
+      await fetch(
+        API +
+        "/api/user?mobile=" +
+        encodeURIComponent(
+          currentMobile
+        )
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.msg ||
+        data.error ||
+        "User load failed"
+      );
+    }
+
+    const user =
+      data.user || data;
+
+    $("profileName").textContent =
+      user.name || currentName || "-";
+
+    $("profileMobile").textContent =
+      user.mobile ||
+      user.phone ||
+      currentMobile;
+
+    $("profileId").textContent =
+      user.id ||
+      user.userId ||
+      "-";
+
+    $("profileStatus").textContent =
+      user.verified === false
+        ? "Not Verified"
+        : "Verified";
+
+    $("walletBalance").textContent =
+      Number(
+        user.wallet || 0
+      ).toFixed(2);
+
+  }catch(error){
+
+    console.log(
+      "loadUser error:",
+      error
+    );
+  }
+}
+
+/* -----------------------------
+   SETTINGS
+----------------------------- */
+
+async function loadSettings(){
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/api/settings"
+      );
+
+    if(!response.ok){
+      return;
+    }
+
+    const data =
+      await response.json();
+
+    if(data.maintenance === true){
+
+      setMessage(
+        "loginMsg",
+        "Website अभी maintenance mode में है।",
+        "error"
+      );
+    }
+
+  }catch(error){
+
+    console.log(
+      "Settings error:",
+      error
+    );
+  }
+}
+
+/* -----------------------------
+   DEPOSIT
+----------------------------- */
+
+async function depositMoney(){
+
+  const amount =
+    Number(
+      $("depositAmount").value
+    );
+
+  if(!amount || amount <= 0){
+
+    setMessage(
+      "walletMsg",
+      "सही amount डालें।",
+      "error"
+    );
+
+    return;
+  }
+
+  setMessage(
+    "walletMsg",
+    "Add Money process हो रहा है..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/api/wallet/deposit",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            mobile:currentMobile,
+            phone:currentMobile,
+            amount:amount
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.msg ||
+        data.error ||
+        "Deposit failed"
+      );
+    }
+
+    const newWallet =
+      data.user
+        ? Number(
+            data.user.wallet || 0
+          )
+        : Number(
+            data.wallet || 0
+          );
+
+    $("walletBalance").textContent =
+      newWallet.toFixed(2);
+
+    $("depositAmount").value = "";
+
+    setMessage(
+      "walletMsg",
+      "₹" +
+      amount +
+      " successfully added.",
+      "success"
+    );
+
+  }catch(error){
+
+    setMessage(
+      "walletMsg",
+      "Deposit error: " +
+      error.message,
+      "error"
+    );
+  }
+}
+
+/* -----------------------------
+   WITHDRAW
+----------------------------- */
+
+async function withdrawMoney(){
+
+  const amount =
+    Number(
+      $("withdrawAmount").value
+    );
+
+  if(!amount || amount <= 0){
+
+    setMessage(
+      "walletMsg",
+      "सही withdrawal amount डालें।",
+      "error"
+    );
+
+    return;
+  }
+
+  setMessage(
+    "walletMsg",
+    "Withdrawal process हो रहा है..."
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        API + "/api/wallet/withdraw",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+          body:JSON.stringify({
+            mobile:currentMobile,
+            phone:currentMobile,
+            amount:amount
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.msg ||
+        data.error ||
+        "Withdrawal failed"
+      );
+    }
+
+    const newWallet =
+      data.user
+        ? Number(
+            data.user.wallet || 0
+          )
+        : Number(
+            data.wallet || 0
+          );
+
+    $("walletBalance").textContent =
+      newWallet.toFixed(2);
+
+    $("withdrawAmount").value = "";
+
+    setMessage(
+      "walletMsg",
+      "₹" +
+      amount +
+      " withdrawal request successful.",
+      "success"
+    );
+
+  }catch(error){
+
+    setMessage(
+      "walletMsg",
+      "Withdraw error: " +
+      error.message,
+      "error"
+    );
+  }
+}
+
+/* -----------------------------
+   HISTORY
+----------------------------- */
+
+async function loadHistory(){
+
+  if(!currentMobile){
+
+    $("historyList").textContent =
+      "Please login first.";
+
+    return;
+  }
+
+  $("historyList").textContent =
+    "Loading...";
+
+  try{
+
+    const response =
+      await fetch(
+        API +
+        "/api/user/transactions?mobile=" +
+        encodeURIComponent(
+          currentMobile
+        )
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        data.msg ||
+        data.error ||
+        "History load failed"
+      );
+    }
+
+    const list =
+      Array.isArray(data)
+        ? data
+        : (
+            data.transactions || []
+          );
+
+    if(!list.length){
+
+      $("historyList").textContent =
+        "अभी कोई transaction नहीं है।";
+
+      return;
+    }
+
+    $("historyList").innerHTML =
+      list.map(function(tx){
+
+        const type =
+          String(
+            tx.type || ""
+          ).toLowerCase();
+
+        const isDeposit =
+          type === "deposit";
+
+        const sign =
+          isDeposit ? "+" : "-";
+
+        const cls =
+          isDeposit
+            ? "credit"
+            : "debit";
+
+        return `
+          <div class="transaction">
+            <b>${tx.type || "Transaction"}</b>
+            <br>
+            <span class="${cls}">
+              ${sign} ₹${Number(tx.amount || 0).toFixed(2)}
+            </span>
+            <br>
+            <span class="small">
+              Status: ${tx.status || "-"}
+            </span>
+            <br>
+            <span class="small">
+              ${tx.createdAt || ""}
+            </span>
+          </div>
+        `;
+
+      }).join("");
+
+  }catch(error){
+
+    $("historyList").textContent =
+      "History error: " +
+      error.message;
+  }
+}
+
+/* -----------------------------
+   SECTIONS
+----------------------------- */
+
+function showSection(id){
+
+  const ids = [
+    "profileCard",
+    "walletCard",
+    "gamesCard",
+    "historyCard",
+    "ludoGameCard"
+  ];
+
+  ids.forEach(function(sectionId){
+
+    const el =
+      $(sectionId);
+
+    if(el){
+      el.classList.add("hidden");
+    }
+  });
+
+  const target =
+    $(id);
+
+  if(target){
+    target.classList.remove("hidden");
+  }
+
+  if(id === "profileCard"){
+    loadUser();
+  }
+
+  if(id === "walletCard"){
+    loadUser();
+  }
+
+  if(id === "historyCard"){
+    loadHistory();
+  }
+}
+
+function closeSections(){
+
+  const ids = [
+    "profileCard",
+    "walletCard",
+    "gamesCard",
+    "historyCard",
+    "ludoGameCard"
+  ];
+
+  ids.forEach(function(id){
+
+    const el = $(id);
+
+    if(el){
+      el.classList.add("hidden");
+    }
+  });
+}
+
+/* -----------------------------
+   LUDO
+----------------------------- */
+
+function openLudo(){
+
+  showSection(
+    "ludoGameCard"
+  );
+
+  createLudoBoard();
+
+  $("ludoMsg").textContent =
+    "आपका turn है। Dice roll करें।";
+}
+
+function createLudoBoard(){
+
+  const board =
+    $("ludoBoard");
+
+  if(!board){
+    return;
+  }
+
+  board.innerHTML = "";
+
+  for(
+    let row = 0;
+    row < 6;
+    row++
+  ){
+
+    for(
+      let col = 0;
+      col < 6;
+      col++
+    ){
+
+      const cell =
+        document.createElement(
+          "div"
+        );
+
+      cell.className = "cell";
+
+      if(row < 2 && col < 2){
+
+        
