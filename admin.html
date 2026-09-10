@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LudoKingStar Admin</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827;
+}
+header{
+  background:#111827;
+  color:white;
+  padding:18px;
+  font-size:22px;
+  font-weight:bold;
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:20px;
+}
+button{
+  border:0;
+  padding:12px 18px;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{background:#1d4ed8}
+
+.page{display:none}
+.page.active{display:block}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 8px #0002;
+}
+.card h3{
+  margin:0 0 10px;
+  color:#6b7280;
+  font-size:15px;
+}
+.number{
+  font-size:30px;
+  font-weight:bold;
+}
+
+.box{
+  background:white;
+  padding:18px;
+  border-radius:12px;
+  box-shadow:0 2px 8px #0002;
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th{
+  background:#111827;
+  color:white;
+  padding:12px;
+  text-align:left;
+}
+td{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.status{
+  margin-top:15px;
+  padding:12px;
+  border-radius:8px;
+  background:#ecfdf5;
+  color:#047857;
+}
+
+.error{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+.setting{
+  margin-bottom:15px;
+}
+.setting label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+.setting input{
+  width:100%;
+  max-width:350px;
+  padding:10px;
+  border:1px solid #d1d5db;
+  border-radius:7px;
+}
+.toggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.toggle input{
+  width:auto;
+}
+</style>
+</head>
+
+<body>
+
+<header>🛡️ LudoKingStar Admin</header>
+
+<div class="container">
+
+<div class="buttons">
+<button onclick="showPage('dashboard');loadDashboard()">Dashboard</button>
+<button onclick="showPage('users');loadUsers()">Users</button>
+<button onclick="showPage('transactions');loadTransactions()">Transactions</button>
+<button onclick="showPage('kyc');loadKyc()">KYC</button>
+<button onclick="showPage('settings');loadSettings()">Settings</button>
+</div>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+<h2>Dashboard</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Users</h3>
+<div class="number" id="totalUsers">-</div>
+</div>
+
+<div class="card">
+<h3>Total Transactions</h3>
+<div class="number" id="totalTransactions">-</div>
+</div>
+
+<div class="card">
+<h3>Total KYC</h3>
+<div class="number" id="totalKyc">-</div>
+</div>
+
+<div class="card">
+<h3>Backend</h3>
+<div class="number" id="backendStatus">...</div>
+</div>
+
+</div>
+
+<div id="dashboardMessage" class="status">
+Loading...
+</div>
+</section>
+
+<!-- USERS -->
+<section id="users" class="page">
+<h2>Users</h2>
+
+<div class="box">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Mobile</th>
+<th>Verified</th>
+<th>Created</th>
+</tr>
+</thead>
+
+<tbody id="usersTable">
+<tr>
+<td colspan="4">Loading...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="transactions" class="page">
+<h2>Transactions</h2>
+
+<div class="box">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>User</th>
+<th>Type</th>
+<th>Amount</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="transactionsTable">
+<tr>
+<td colspan="5">Loading...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- KYC -->
+<section id="kyc" class="page">
+<h2>KYC</h2>
+
+<div class="box">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>User</th>
+<th>Status</th>
+<th>Submitted</th>
+</tr>
+</thead>
+
+<tbody id="kycTable">
+<tr>
+<td colspan="4">Loading...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="page">
+<h2>Settings</h2>
+
+<div class="box">
+
+<div class="setting toggle">
+<input type="checkbox" id="otpLogin">
+<label for="otpLogin">OTP Login</label>
+</div>
+
+<div class="setting toggle">
+<input type="checkbox" id="registration">
+<label for="registration">Registration</label>
+</div>
+
+<div class="setting toggle">
+<input type="checkbox" id="maintenance">
+<label for="maintenance">Maintenance Mode</label>
+</div>
+
+<div class="setting">
+<label>Minimum Deposit</label>
+<input type="number" id="minDeposit">
+</div>
+
+<div class="setting">
+<label>Maximum Deposit</label>
+<input type="number" id="maxDeposit">
+</div>
+
+<div class="setting">
+<label>Minimum Withdraw</label>
+<input type="number" id="minWithdraw">
+</div>
+
+<div class="setting">
+<label>Maximum Withdraw</label>
+<input type="number" id="maxWithdraw">
+</div>
+
+<button onclick="saveSettings()">💾 Save Settings</button>
+
+<div id="settingsMessage"></div>
+
+</div>
+</section>
+
+</div>
+
+<script>
+
+const API =
+"https://ludokingstar-ludokingstar-backend-2026.onrender.com";
+
+function showPage(page){
+
+  document.querySelectorAll(".page").forEach(function(p){
+    p.classList.remove("active");
+  });
+
+  document.getElementById(page).classList.add("active");
+}
+
+async function getData(url){
+
+  const response = await fetch(API + url);
+
+  if(!response.ok){
+    throw new Error("Backend error");
+  }
+
+  return await response.json();
+}
+
+/* DASHBOARD */
+
+async function loadDashboard(){
+
+  try{
+
+    const users = await getData("/api/users");
+    const transactions = await getData("/api/transactions");
+    const kyc = await getData("/api/kyc");
+    const health = await getData("/api/health");
+
+    document.getElementById("totalUsers").innerText =
+      Array.isArray(users) ? users.length : 0;
+
+    document.getElementById("totalTransactions").innerText =
+      Array.isArray(transactions) ? transactions.length : 0;
+
+    document.getElementById("totalKyc").innerText =
+      Array.isArray(kyc) ? kyc.length : 0;
+
+    document.getElementById("backendStatus").innerText =
+      health.ok ? "LIVE" : "OFF";
+
+    document.getElementById("dashboardMessage").innerText =
+      "✅ Dashboard connected to backend";
+
+  }catch(error){
+
+    document.getElementById("backendStatus").innerText="ERROR";
+
+    document.getElementById("dashboardMessage").innerText =
+      "❌ Backend connection failed";
+
+  }
+}
+
+/* USERS */
+
+async function loadUsers(){
+
+  const table = document.getElementById("usersTable");
+
+  try{
+
+    const data = await getData("/api/users");
+
+    if(!Array.isArray(data) || data.length===0){
+
+      table.innerHTML =
+      '<tr><td colspan="4">No users found</td></tr>';
+
+      return;
+    }
+
+    table.innerHTML = data.map(function(user,index){
+
+      return `
+      <tr>
+        <td>${index+1}</td>
+        <td>${user.mobile || user.phone || "-"}</td>
+        <td>${user.verified ? "✅ Verified" : "⏳ Pending"}</td>
+        <td>${user.createdAt || user.created_at || "-"}</td>
+      </tr>`;
+
+    }).join("");
+
+  }catch(error){
+
+    table.innerHTML =
+    '<tr><td colspan="4">❌ Users load failed</td></tr>';
+
+  }
+}
+
+/* TRANSACTIONS */
+
+async function loadTransactions(){
+
+  const table = document.getElementById("transactionsTable");
+
+  try{
+
+    const data = await getData("/api/transactions");
+
+    if(!Array.isArray(data) || data.length===0){
+
+      table.innerHTML =
+      '<tr><td colspan="5">No transactions found</td></tr>';
+
+      return;
+    }
+
+    table.innerHTML = data.map(function(item,index){
+
+      return `
+      <tr>
+        <td>${index+1}</td>
+        <td>${item.mobile || item.user || item.userId || "-"}</td>
+        <td>${item.type || "-"}</td>
+        <td>${item.amount ?? "-"}</td>
+        <td>${item.status || "-"}</td>
+      </tr>`;
+
+    }).join("");
+
+  }catch(error){
+
+    table.innerHTML =
+    '<tr><td colspan="5">❌ Transactions load failed</td></tr>';
+
+  }
+}
+
+/* KYC */
+
+async function loadKyc(){
+
+  const table = document.getElementById("kycTable");
+
+  try{
+
+    const data = await getData("/api/kyc");
+
+    if(!Array.isArray(data) || data.length===0){
+
+      table.innerHTML =
+      '<tr><td colspan="4">No KYC records found</td></tr>';
+
+      return;
+    }
+
+    table.innerHTML = data.map(function(item,index){
+
+      return `
+      <tr>
+        <td>${index+1}</td>
+        <td>${item.mobile || item.user || item.userId || "-"}</td>
+        <td>${item.status || "-"}</td>
+        <td>${item.createdAt || item.created_at || "-"}</td>
+      </tr>`;
+
+    }).join("");
+
+  }catch(error){
+
+    table.innerHTML =
+    '<tr><td colspan="4">❌ KYC load failed</td></tr>';
+
+  }
+}
+
+/* SETTINGS */
+
+async function loadSettings(){
+
+  try{
+
+    const data = await getData("/api/settings");
+
+    document.getElementById("otpLogin").checked =
+      data.otpLogin === true;
+
+    document.getElementById("registration").checked =
+      data.registration === true;
+
+    document.getElementById("maintenance").checked =
+      data.maintenance === true;
+
+    document.getElementById("minDeposit").value =
+      data.minDeposit ?? 10;
+
+    document.getElementById("maxDeposit").value =
+      data.maxDeposit ?? 10000;
+
+    document.getElementById("minWithdraw").value =
+      data.minWithdraw ?? 100;
+
+    document.getElementById("maxWithdraw").value =
+      data.maxWithdraw ?? 10000;
+
+  }catch(error){
+
+    document.getElementById("settingsMessage").innerHTML =
+      '<div class="status error">❌ Settings load failed</div>';
+
+  }
+}
+
+/* SAVE SETTINGS */
+
+async function saveSettings(){
+
+  const message =
+    document.getElementById("settingsMessage");
+
+  const settings = {
+
+    otpLogin:
+      document.getElementById("otpLogin").checked,
+
+    registration:
+      document.getElementById("registration").checked,
+
+    maintenance:
+      document.getElementById("maintenance").checked,
+
+    minDeposit:
+      Number(document.getElementById("minDeposit").value),
+
+    maxDeposit:
+      Number(document.getElementById("maxDeposit").value),
+
+    minWithdraw:
+      Number(document.getElementById("minWithdraw").value),
+
+    maxWithdraw:
+      Number(document.getElementById("maxWithdraw").value)
+
+  };
+
+  try{
+
+    const response = await fetch(
+      API + "/api/admin/settings",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(settings)
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+      throw new Error(data.error || "Save failed");
+    }
+
+    message.innerHTML =
+      '<div class="status">✅ Settings saved successfully</div>';
+
+  }catch(error){
+
+    message.innerHTML =
+      '<div class="status error">❌ Settings save failed</div>';
+
+  }
+}
+
+/* START */
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>
