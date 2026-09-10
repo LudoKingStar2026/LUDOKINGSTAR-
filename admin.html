@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LudoKingStar Admin Control Panel</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#172033}
+.header{background:linear-gradient(135deg,#111827,#374151);color:#fff;padding:22px 18px}
+.wrap{max-width:900px;margin:auto;padding:16px}.header h1{margin:0;font-size:24px}.header p{margin:7px 0 0;color:#d1d5db}
+.card{background:#fff;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 5px 18px rgba(0,0,0,.07)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8fafc;padding:15px;border-radius:12px}.stat b{font-size:25px;display:block;margin-top:5px}
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+button{width:100%;border:0;border-radius:10px;padding:13px;font-size:15px;font-weight:700;background:#374151;color:#fff;margin-top:8px}
+button.secondary{background:#eef2f7;color:#172033}.hidden{display:none}.error{color:#b91c1c}.ok{color:#15803d}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 7px;border-bottom:1px solid #e5e7eb;text-align:left}
+.tablewrap{overflow:auto}.badge{padding:5px 8px;border-radius:20px;background:#dcfce7;color:#166534;white-space:nowrap}
+.small{font-size:13px;color:#667085}.row{display:flex;justify-content:space-between;gap:10px}
+@media(max-width:520px){.stats,.menu{grid-template-columns:1fr 1fr}table{min-width:650px}}
+</style>
+</head>
+<body>
+<div class="header"><div class="wrap">
+<h1>🛡️ LudoKingStar Admin</h1><p>Control Panel • Demo</p>
+</div></div>
+
+<div class="wrap">
+<div id="login" class="card">
+<h2>Admin Login</h2>
+<p class="small">Demo admin panel. अभी कोई real admin authentication नहीं है।</p>
+<button onclick="openAdmin()">Open Control Panel</button>
+</div>
+
+<div id="admin" class="hidden">
+<div class="card">
+<div class="row"><div><h2 style="margin:0">Dashboard</h2><p class="small">Backend data overview</p></div>
+<button style="width:auto;padding:9px 14px" onclick="loadAll()">↻ Refresh</button></div>
+<div class="stats">
+<div class="stat">Users<b id="userCount">0</b></div>
+<div class="stat">Transactions<b id="txCount">0</b></div>
+</div>
+<div id="msg" class="small"></div>
+</div>
+
+<div class="card">
+<h3>Control Menu</h3>
+<div class="menu">
+<button onclick="show('users')">👥 Users</button>
+<button onclick="show('transactions')">💳 Transactions</button>
+<button onclick="show('kyc')">🪪 KYC</button>
+<button onclick="show('settings')">⚙️ Settings</button>
+</div>
+</div>
+
+<div id="users" class="card hidden">
+<h3>👥 Users</h3><div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Wallet</th><th>Status</th></tr></thead>
+<tbody id="usersBody"><tr><td colspan="5">Loading...</td></tr></tbody>
+</table></div>
+</div>
+
+<div id="transactions" class="card hidden">
+<h3>💳 Transactions</h3><div class="tablewrap"><table>
+<thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+<tbody id="txBody"><tr><td colspan="5">Loading...</td></tr></tbody>
+</table></div>
+<p class="small">Demo backend में अभी transactions खाली हो सकते हैं।</p>
+</div>
+
+<div id="kyc" class="card hidden">
+<h3>🪪 KYC</h3>
+<div id="kycBox" class="small">Loading...</div>
+</div>
+
+<div id="settings" class="card hidden">
+<h3>⚙️ Settings</h3>
+<div id="settingsBox" class="small">Loading...</div>
+</div>
+
+<div class="card">
+<button class="secondary" onclick="logout()">Logout</button>
+</div>
+</div>
+</div>
+
+<script>
+const API="https://ludokingstar-ludokingstar-backend-2026.onrender.com";
+
+function openAdmin(){
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("admin").classList.remove("hidden");
+ loadAll();
+}
+
+function show(id){
+ ["users","transactions","kyc","settings"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+async function get(path){
+ const r=await fetch(API+path);
+ const d=await r.json();
+ if(!r.ok) throw Error(d.error||"Request failed");
+ return d;
+}
+
+async function loadAll(){
+ try{
+  const [u,t,k,s]=await Promise.all([
+   get("/api/users"),get("/api/transactions"),get("/api/kyc"),get("/api/settings")
+  ]);
+  const users=u.users||[], tx=t.transactions||[];
+  document.getElementById("userCount").textContent=users.length;
+  document.getElementById("txCount").textContent=tx.length;
+
+  document.getElementById("usersBody").innerHTML=users.length?users.map(x=>`
+   <tr><td>${esc(x.id)}</td><td>${esc(x.name)}</td><td>${esc(x.mobile)}</td>
+   <td>₹${Number(x.wallet||0)}</td><td>${x.verified?'<span class="badge">Verified</span>':'Pending'}</td></tr>`).join("")
+   :'<tr><td colspan="5">कोई user नहीं मिला।</td></tr>';
+
+  document.getElementById("txBody").innerHTML=tx.length?tx.map(x=>`
+   <tr><td>${esc(x.id)}</td><td>${esc(x.userId||x.mobile||"-")}</td>
+   <td>${esc(x.type||"-")}</td><td>₹${Number(x.amount||0)}</td><td>${esc(x.status||"-")}</td></tr>`).join("")
+   :'<tr><td colspan="5">कोई transaction नहीं मिला।</td></tr>';
+
+  document.getElementById("kycBox").textContent=JSON.stringify(k,null,2);
+  document.getElementById("settingsBox").textContent=JSON.stringify(s,null,2);
+  document.getElementById("msg").textContent="Backend data loaded successfully.";
+  document.getElementById("msg").className="ok";
+ }catch(e){
+  document.getElementById("msg").textContent="Backend error: "+e.message;
+  document.getElementById("msg").className="error";
+ }
+}
+
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+function logout(){location.reload()}
+</script>
+</body>
+</html>
