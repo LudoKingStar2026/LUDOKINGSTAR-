@@ -1,0 +1,10 @@
+{
+  "users": [],
+  "transactions": [],
+  "kyc": [],
+  "settings": {
+    "otpLogin": true,
+    "registration": true,
+    "maintenance": false
+  }
+}
