@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LudoKingStar User Panel</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#fff;
+ color:#111;
+}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* LOGIN */
+.login{
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:linear-gradient(135deg,#21102c,#5b1f35);
+ padding:20px;
+}
+.loginBox{
+ width:100%;
+ max-width:400px;
+ background:#fff;
+ padding:25px;
+ border-radius:18px;
+ box-shadow:0 10px 30px #0005;
+}
+.logoBig{
+ width:80px;height:80px;
+ margin:auto;
+ border-radius:50%;
+ background:#172b69;
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ font-weight:bold;
+ font-size:18px;
+}
+.loginBox h1{text-align:center}
+input{
+ width:100%;
+ padding:14px;
+ border:1px solid #ccc;
+ border-radius:8px;
+ margin:7px 0 12px;
+}
+.mainBtn{
+ width:100%;
+ padding:14px;
+ border:0;
+ border-radius:9px;
+ background:#24102e;
+ color:#fff;
+ font-weight:bold;
+}
+.secondary{
+ width:100%;
+ padding:13px;
+ border:0;
+ border-radius:8px;
+ margin-top:8px;
+}
+.msg{min-height:20px;padding:8px}
+.error{color:#d71935}
+.success{color:#078044}
+
+/* HEADER */
+.top{
+ background:#24102e;
+ color:#fff;
+ text-align:center;
+ padding:8px;
+ font-size:13px;
+}
+.header{
+ height:76px;
+ background:#27263e;
+ display:flex;
+ align-items:center;
+ padding:8px 14px;
+ gap:12px;
+ box-shadow:0 2px 6px #0003;
+}
+.menuBtn{
+ width:48px;
+ background:none;
+ color:#fff;
+ font-size:32px;
+ border:0;
+}
+.logo{
+ width:70px;height:62px;
+ border-radius:50%;
+ border:5px solid #fff;
+ background:#15346e;
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ font-size:12px;
+ font-weight:bold;
+}
+.headSpace{flex:1}
+.headBox{
+ background:#28232c;
+ border:1px solid #fff8;
+ color:#fff;
+ border-radius:30px;
+ padding:11px 15px;
+ font-weight:bold;
+}
+.walletHead{
+ background:#28232c;
+ color:#fff;
+ border-radius:30px;
+ padding:11px 15px;
+ font-weight:bold;
+}
+
+/* CONTENT */
+.container{
+ max-width:760px;
+ margin:auto;
+ padding:12px 14px 85px;
+}
+.notice{
+ background:#fff2bd;
+ border:1px solid #ddd;
+ border-radius:10px;
+ padding:12px;
+ margin-bottom:10px;
+ font-size:14px;
+ font-weight:bold;
+}
+.notice2{
+ background:#c9f3ff;
+ color:#07596c;
+}
+.sectionTitle{
+ font-size:27px;
+ font-weight:bold;
+ margin:20px 0 12px;
+}
+.line{
+ height:4px;
+ background:#ed3850;
+ border-radius:5px;
+ margin:22px 0;
+}
+
+/* CHALLENGES */
+.challenge{
+ border:2px solid #d0ccd0;
+ border-radius:14px;
+ overflow:hidden;
+ margin-bottom:12px;
+ background:#fffaff;
+}
+.challengeTop{
+ padding:14px 16px;
+ border-bottom:1px solid #eaddea;
+ font-size:22px;
+}
+.challengeTop b{color:#304fb2}
+.challengeBody{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:14px 16px;
+}
+.info{
+ width:34%;
+}
+.label{
+ color:#9d3150;
+ font-size:14px;
+ font-weight:bold;
+ margin-bottom:7px;
+}
+.value{
+ font-size:25px;
+ font-weight:bold;
+}
+.playBtn{
+ background:linear-gradient(180deg,#e40021,#28201f);
+ color:#fff;
+ border:0;
+ border-radius:10px;
+ padding:13px 28px;
+ font-size:21px;
+ font-weight:bold;
+}
+
+/* RUNNING */
+.running{
+ border:2px solid #ddd;
+ border-radius:12px;
+ padding:14px;
+ margin-bottom:10px;
+}
+.runningTop{
+ display:flex;
+ justify-content:space-between;
+ font-weight:bold;
+}
+
+/* WALLET */
+.balance{
+ background:linear-gradient(135deg,#29112f,#65264b);
+ color:#fff;
+ border-radius:14px;
+ padding:20px;
+}
+.balance strong{
+ display:block;
+ font-size:38px;
+ margin-top:5px;
+}
+
+/* OTHER CARDS */
+.card{
+ background:#fff;
+ border:1px solid #ddd;
+ border-radius:12px;
+ padding:18px;
+ margin-top:12px;
+}
+.profileRow{
+ padding:13px 0;
+ border-bottom:1px solid #eee;
+}
+
+/* BOTTOM */
+.bottom{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ height:65px;
+ background:#050505;
+ display:flex;
+ z-index:20;
+}
+.bottom button{
+ flex:1;
+ border:0;
+ background:#050505;
+ color:#fff;
+ font-size:12px;
+ font-weight:bold;
+}
+.bottom span{
+ display:block;
+ font-size:22px;
+ margin-bottom:2px;
+}
+
+/* DRAWER */
+.overlay{
+ position:fixed;
+ inset:0;
+ background:#0008;
+ z-index:30;
+}
+.drawer{
+ position:fixed;
+ left:0;
+ top:0;
+ bottom:0;
+ width:min(330px,85%);
+ background:#fff;
+ z-index:31;
+ overflow:auto;
+}
+.drawerHead{
+ background:#27263e;
+ color:#fff;
+ padding:20px;
+ font-size:23px;
+ display:flex;
+ justify-content:space-between;
+}
+.drawerHead button{
+ background:none;
+ color:#fff;
+ border:0;
+ font-size:30px;
+}
+.drawerItem{
+ display:block;
+ width:100%;
+ padding:18px;
+ background:#fff;
+ border:0;
+ border-bottom:1px solid #eee;
+ text-align:left;
+ font-size:17px;
+}
+
+@media(max-width:480px){
+ .logo{width:60px;height:58px}
+ .headBox,.walletHead{padding:10px 11px;font-size:13px}
+ .challengeTop{font-size:19px}
+ .value{font-size:22px}
+ .playBtn{padding:11px 22px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginScreen" class="login">
+
+<div class="loginBox">
+
+<div class="logoBig">
+LK<br>STAR
+</div>
+
+<h1>LudoKingStar</h1>
+
+<div id="loginStep">
+
+<input id="name"
+type="text"
+placeholder="अपना नाम">
+
+<input id="mobile"
+type="tel"
+inputmode="numeric"
+maxlength="10"
+placeholder="10 digit mobile number">
+
+<button id="loginBtn"
+class="mainBtn"
+type="button">
+📱 Login / Get OTP
+</button>
+
+<div id="loginMsg" class="msg"></div>
+
+</div>
+
+
+<div id="otpStep" class="hidden">
+
+<h3>📱 OTP Verification</h3>
+
+<p>Demo OTP: <b>123456</b></p>
+
+<input id="otp"
+type="tel"
+inputmode="numeric"
+maxlength="6"
+placeholder="123456">
+
+<button id="verifyBtn"
+class="mainBtn"
+type="button">
+✅ Verify OTP
+</button>
+
+<button id="backBtn"
+class="secondary"
+type="button">
+⬅ Back
+</button>
+
+<div id="otpMsg" class="msg"></div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= APP ================= -->
+
+<div id="app" class="hidden">
+
+<div class="top">
+Exclusive Offer ! Win Real Cash 😍
+</div>
+
+<header class="header">
+
+<button id="menuBtn"
+class="menuBtn"
+type="button">
+☰
+</button>
+
+<div class="logo">
+NK<br>ADD
+</div>
+
+<div class="headSpace"></div>
+
+<div class="walletHead">
+💰 ₹<span id="headerBalance">0</span> +
+</div>
+
+<div class="headBox">
+👥 <span id="userCount">1</span>
+</div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- HOME -->
+
+<section id="home">
+
+<div class="notice">
+⚠️ Notice:- कृपया अपना PAN/KYC वाला सही Name रखें।
+</div>
+
+<div class="notice notice2">
+⚠️ Welcome to LudoKingStar
+</div>
+
+
+<div class="sectionTitle">
+Open Battles
+</div>
+
+
+<div id="challengeList"></div>
+
+
+<div class="line"></div>
+
+
+<div class="sectionTitle">
+🗡️ Running Battles
+</div>
+
+<div id="runningList">
+
+<div class="running">
+
+<div class="runningTop">
+<span>Playing For</span>
+<span>₹100</span>
+</div>
+
+<p>
+👤 Player One &nbsp; VS &nbsp; 👤 Player Two
+</p>
+
+</div>
+
+<div class="running">
+
+<div class="runningTop">
+<span>Playing For</span>
+<span>₹250</span>
+</div>
+
+<p>
+👤 Player Three &nbsp; VS &nbsp; 👤 Player Four
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- WALLET -->
+
+<section id="wallet" class="hidden">
+
+<div class="card">
+
+<div class="balance">
+
+<small>Available Balance</small>
+
+<strong>
+₹<span id="walletBalance">0.00</span>
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>💰 My Wallet</h2>
+
+<h3>Add Money</h3>
+
+<input id="depositAmount"
+type="number"
+placeholder="Amount">
+
+<button id="depositBtn"
+class="mainBtn"
+type="button">
+➕ Add Money
+</button>
+
+
+<h3>Withdraw</h3>
+
+<input id="withdrawAmount"
+type="number"
+placeholder="Amount">
+
+<button id="withdrawBtn"
+class="mainBtn"
+type="button">
+↗ Withdraw
+</button>
+
+<div id="walletMsg" class="msg"></div>
+
+</div>
+
+</section>
+
+
+<!-- REFER -->
+
+<section id="refer" class="hidden">
+
+<div class="card">
+
+<h2>🎁 Refer & Earn</h2>
+
+<p>
+अपने दोस्तों को LudoKingStar से जोड़ें।
+</p>
+
+<input id="referCode"
+value=""
+readonly>
+
+<button id="copyRefer"
+class="mainBtn"
+type="button">
+📋 Copy Referral Code
+</button>
+
+<div id="referMsg" class="msg"></div>
+
+</div>
+
+</section>
+
+
+<!-- HISTORY -->
+
+<section id="history" class="hidden">
+
+<div class="card">
+
+<h2>📜 History</h2>
+
+<button id="refreshHistory"
+class="mainBtn"
+type="button">
+🔄 Refresh History
+</button>
+
+<div id="historyList">
+Loading...
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ACCOUNT -->
+
+<section id="account" class="hidden">
+
+<div class="card">
+
+<h2>👤 Account</h2>
+
+<div class="profileRow">
+<b>Name</b>
+<br>
+<span id="profileName">-</span>
+</div>
+
+<div class="profileRow">
+<b>Mobile</b>
+<br>
+<span id="profileMobile">-</span>
+</div>
+
+<div class="profileRow">
+<b>User ID</b>
+<br>
+<span id="profileId">-</span>
+</div>
+
+<div class="profileRow">
+<b>Status</b>
+<br>
+<span id="profileStatus">-</span>
+</div>
+
+<button id="logoutBtn"
+class="mainBtn"
+type="button">
+🚪 Logout
+</button>
+
+</div>
+
+</section>
+
+
+<!-- LUDO -->
+
+<section id="ludo" class="hidden">
+
+<div class="card">
+
+<h2>🎲 Ludo Classic</h2>
+
+<p>
+Current Player:
+<b id="currentPlayer">Red</b>
+</p>
+
+<p>
+Dice:
+<b id="dice">-</b>
+</p>
+
+<div id="board"
+style="
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:3px;
+margin:15px 0;
+"></div>
+
+<button id="rollBtn"
+class="mainBtn"
+type="button">
+🎲 Roll Dice
+</button>
+
+<div id="ludoMsg" class="msg"></div>
+
+</div>
+
+</section>
+
+
+</main>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom">
+
+<button data-page="home" type="button">
+<span>🏠</span>
+Home
+</button>
+
+<button data-page="wallet" type="button">
+<span>💰</span>
+My wallet
+</button>
+
+<button data-page="refer" type="button">
+<span>🎁</span>
+Refer
+</button>
+
+<button data-page="history" type="button">
+<span>📜</span>
+History
+</button>
+
+<button data-page="account" type="button">
+<span>👤</span>
+Account
+</button>
+
+</nav>
+
+</div>
+
+
+<!-- DRAWER -->
+
+<div id="overlay"
+class="overlay hidden">
+</div>
+
+<aside id="drawer"
+class="drawer hidden">
+
+<div class="drawerHead">
+
+LudoKingStar
+
+<button id="drawerClose"
+type="button">
+×
+</button>
+
+</div>
+
+<button class="drawerItem"
+data-drawer="home"
+type="button">
+🎲 Play
+</button>
+
+<button class="drawerItem"
+data-drawer="wallet"
+type="button">
+💰 Wallet
+</button>
+
+<button class="drawerItem"
+data-drawer="refer"
+type="button">
+🎁 Refer & Earn
+</button>
+
+<button class="drawerItem"
+data-drawer="history"
+type="button">
+📜 History
+</button>
+
+<button class="drawerItem"
+data-drawer="account"
+type="button">
+👤 Account
+</button>
+
+<button class="drawerItem"
+id="supportBtn"
+type="button">
+🎧 Support
+</button>
+
+</aside>
+
+
+<script>
+
+/* =========================
+   BACKEND
+========================= */
+
+const API =
+"https://ludokingstar-ludokingstar-backend-2026.onrender.com";
+
+
+let currentMobile =
+localStorage.getItem("lks_mobile") || "";
+
+let currentName =
+localStorage.getItem("lks_name") || "";
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function $(id){
+ return document.getElementById(id);
+}
+
+
+function show(id){
+ $(id).classList.remove("hidden");
+}
+
+
+function hide(id){
+ $(id).classList.add("hidden");
+}
+
+
+function message(id,text,type=""){
+ $(id).textContent=text;
+ $(id).className="msg "+type;
+}
+
+
+async function api(url,options={}){
+ const response=await fetch(url,{
+   ...options,
+   headers:{
+     "Content-Type":"application/json",
+     ...(options.headers||{})
+   }
+ });
+
+ const text=await response.text();
+
+ let data={};
+
+ try{
+   data=text ? JSON.parse(text) : {};
+ }catch(e){}
+
+ if(!response.ok){
+   throw new Error(
+     data.msg ||
+     data.message ||
+     data.error ||
+     "Request failed"
+   );
+ }
+
+ return data;
+}
+
+
+/* =========================
+   PAGE SWITCH
+========================= */
+
+function page(id){
+
+[
+ "home",
+ "wallet",
+ "refer",
+ "history",
+ "account",
+ "ludo"
+].forEach(x=>{
+ $(x).classList.add("hidden");
+});
+
+$(id).classList.remove("hidden");
+
+if(id==="wallet" || id==="account"){
+ loadUser();
+}
+
+if(id==="history"){
+ loadHistory();
+}
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function requestOTP(){
+
+ const name=
+ $("name").value.trim();
+
+ const mobile=
+ $("mobile").value.replace(/\D/g,"");
+
+
+ if(name.length<2){
+
+   message(
+     "loginMsg",
+     "अपना नाम डालें।",
+     "error"
+   );
+
+   return;
+ }
+
+
+ if(!/^[6-9][0-9]{9}$/.test(mobile)){
+
+   message(
+     "loginMsg",
+     "सही 10 digit mobile number डालें।",
+     "error"
+   );
+
+   return;
+ }
+
+
+ const btn=$("loginBtn");
+
+ btn.disabled=true;
+ btn.textContent="OTP भेजा जा रहा है...";
+
+
+ try{
+
+   await api(
+     API+"/api/auth/request-otp",
+     {
+       method:"POST",
+       body:JSON.stringify({
+         name:name,
+         mobile:mobile,
+         phone:mobile
+       })
+     }
+   );
+
+
+   currentName=name;
+   currentMobile=mobile;
+
+
+   hide("loginStep");
+   show("otpStep");
+
+   $("otp").focus();
+
+
+   message(
+     "otpMsg",
+     "OTP भेज दिया गया। Demo OTP: 123456",
+     "success"
+   );
+
+
+ }catch(error){
+
+   message(
+     "loginMsg",
+     "Error: "+error.message,
+     "error"
+   );
+
+ }finally{
+
+   btn.disabled=false;
+   btn.textContent="📱 Login / Get OTP";
+
+ }
+
+}
+
+
+/* =========================
+   VERIFY
+========================= */
+
+async function verifyOTP(){
+
+ const otp=
+ $("otp").value.trim();
+
+
+ if(!/^[0-9]{6}$/.test(otp)){
+
+   message(
+     "otpMsg",
+     "6 digit OTP डालें।",
+     "error"
+   );
+
+   return;
+ }
+
+
+ const btn=$("verifyBtn");
+
+ btn.disabled=true;
+ btn.textContent="Verify हो रहा है...";
+
+
+ try{
+
+   await api(
+     API+"/api/auth/verify-otp",
+     {
+       method:"POST",
+       body:JSON.stringify({
+         name:currentName,
+         mobile:currentMobile,
+         phone:currentMobile,
+         otp:otp
+       })
+     }
+   );
+
+
+   localStorage.setItem(
+     "lks_mobile",
+     currentMobile
+   );
+
+   localStorage.setItem(
+     "lks_name",
+     currentName
+   );
+
+
+   hide("loginScreen");
+   show("app");
+
+   await loadUser();
+
+   page("home");
+
+
+ }catch(error){
+
+   message(
+     "otpMsg",
+     "Verify Error: "+error.message,
+     "error"
+   );
+
+ }finally{
+
+   btn.disabled=false;
+   btn.textContent="✅ Verify OTP";
+
+ }
+
+}
+
+
+/* =========================
+   USER
+========================= */
+
+async function loadUser(){
+
+ if(!currentMobile)return;
+
+
+ try{
+
+   const data=
+     await api(
+       API+
+       "/api/user?mobile="+
+       encodeURIComponent(currentMobile)
+     );
+
+
+   const user=
+     data.user || data;
+
+
+   currentName=
+     user.name || currentName;
+
+
+   const mobile=
+     user.mobile ||
+     user.phone ||
+     currentMobile;
+
+
+   const wallet=
+     Number(user.wallet || 0);
+
+
+   $("profileName").textContent=
+     currentName;
+
+   $("profileMobile").textContent=
+     mobile;
+
+   $("profileId").textContent=
+     user.id ||
+     user.userId ||
+     "-";
+
+   $("profileStatus").textContent=
+     user.verified===false
+     ?"Not Verified"
+     :"Verified";
+
+
+   $("walletBalance").textContent=
+     wallet.toFixed(2);
+
+
+   $("headerBalance").textContent=
+     wallet.toLocaleString("en-IN");
+
+
+ }catch(error){
+
+   console.log(error.message);
+
+ }
+
+}
+
+
+/* =========================
+   WALLET
+========================= */
+
+async function deposit(){
+
+ const amount=
+   Number($("depositAmount").value);
+
+
+ if(!(amount>0)){
+
+   message(
+     "walletMsg",
+     "Amount डालें।",
+     "error"
+   );
+
+   return;
+ }
+
+
+ try{
+
+   const data=
+     await api(
+       API+"/api/wallet/deposit",
+       {
+         method:"POST",
+         body:JSON.stringify({
+           mobile:currentMobile,
+           phone:currentMobile,
+           amount:amount
+         })
+       }
+     );
+
+
+   const wallet=
+     Number(
+       data.user
+       ?data.user.wallet
+       :data.wallet || 0
+     );
+
+
+   $("walletBalance").textContent=
+     wallet.toFixed(2);
+
+   $("headerBalance").textContent=
+     wallet.toLocaleString("en-IN");
+
+
+   $("depositAmount").value="";
+
+
+   message(
+     "walletMsg",
+     "₹"+amount+" successfully added.",
+     "success"
+   );
+
+
+ }catch(error){
+
+   message(
+     "walletMsg",
+     "Deposit Error: "+error.message,
+     "error"
+   );
+
+ }
+
+}
+
+
+async function withdraw(){
+
+ const amount=
+   Number($("withdrawAmount").value);
+
+
+ if(!(amount>0)){
+
+   message(
+     "walletMsg",
+     "Amount डालें।",
+     "error"
+   );
+
+   return;
+ }
+
+
+ try{
+
+   const data=
+     await api(
+       API+"/api/wallet/withdraw",
+       {
+         method:"POST",
+         body:JSON.stringify({
+           mobile:currentMobile,
+           phone:currentMobile,
+           amount:amount
+         })
+       }
+     );
+
+
+   const wallet=
+     Number(
+       data.user
+       ?data.user.wallet
+       :data.wallet || 0
+     );
+
+
+   $("walletBalance").textContent=
+     wallet.toFixed(2);
+
+   $("headerBalance").textContent=
+     wallet.toLocaleString("en-IN");
+
+
+   $("withdrawAmount").value="";
+
+
+   message(
+     "walletMsg",
+     "₹"+amount+" withdrawal successful.",
+     "success"
+   );
+
+
+ }catch(error){
+
+   message(
+     "walletMsg",
+     "Withdraw Error: "+error.message,
+     "error"
+   );
+
+ }
+
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+async function loadHistory(){
+
+ $("historyList").textContent=
+   "Loading...";
+
+
+ try{
+
+   const data=
+     await api(
+       API+
+       "/api/user/transactions?mobile="+
+       encodeURIComponent(currentMobile)
+     );
+
+
+   const list=
+     Array.isArray(data)
+     ?data
+     :(data.transactions || []);
+
+
+   if(!list.length){
+
+     $("historyList").textContent=
+       "अभी कोई transaction नहीं है।";
+
+     return;
+   }
+
+
+   $("historyList").innerHTML=
+     list.map(t=>{
+
+       const deposit=
+         String(t.type).toLowerCase()
+         ==="deposit";
+
+
+       return `
+       <div class="profileRow">
+
+       <b>${t.type || "-"}</b>
+
+       <br>
+
+       <span style="
+       color:${deposit?"green":"red"};
+       font-weight:bold">
+
+       ${deposit?"+":"-"}
+       ₹${Number(t.amount||0).toFixed(2)}
+
+       </span>
+
+       <br>
+
+       <small>
+       Status: ${t.status || "-"}
+       </small>
+
+       <br>
+
+       <small>
+       ${t.createdAt || ""}
+       </small>
+
+       </div>
+       `;
+
+     }).join("");
+
+
+ }catch(error){
+
+   $("historyList").textContent=
+     "History Error: "+error.message;
+
+ }
+
+}
+
+
+/* =========================
+   CHALLENGES
+========================= */
+
+const challenges=[
+ {
+   name:"Mustkim",
+   entry:950,
+   prize:1843
+ },
+ {
+   name:"DxDqu",
+   entry:350,
+   prize:679
+ },
+ {
+   name:"Agjvo bhai yrrr",
+   entry:250,
+   prize:475
+ },
+ {
+   name:"Noddy khannn",
+   entry:300,
+   prize:582
+ },
+ {
+   name:"BmPJw",
+   entry:500,
+   prize:970
+ }
+];
+
+
+function createChallenges(){
+
+ $("challengeList").innerHTML=
+ challenges.map((c,i)=>`
+
+ <div class="challenge">
+
+   <div class="challengeTop">
+     Challenge From
+     <b>${c.name}</b>
+   </div>
+
+   <div class="challengeBody">
+
+     <div class="info">
+       <div class="label">ENTRY FEE</div>
+       <div class="value">💰 ${c.entry}</div>
+     </div>
+
+     <div class="info">
+       <div class="label">PRIZE</div>
+       <div class="value">💰 ${c.prize}</div>
+     </div>
+
+     <button
+       class="playBtn"
+       type="button"
+       data-challenge="${i}">
+       Play
+     </button>
+
+   </div>
+
+ </div>
+
+ `).join("");
+
+
+ document
+ .querySelectorAll("[data-challenge]")
+ .forEach(btn=>{
+
+   btn.addEventListener(
+     "click",
+     function(){
+
+       const index=
+         Number(this.dataset.challenge);
+
+       const c=
+         challenges[index];
+
+       alert(
+         "Demo Challenge\n\n"+
+         "Player: "+c.name+
+         "\nEntry Fee: ₹"+c.entry+
+         "\nPrize: ₹"+c.prize
+       );
+
+     }
+   );
+
+ });
+
+}
+
+
+/* =========================
+   LUDO
+========================= */
+
+function createBoard(){
+
+ let html="";
+
+ for(let i=0;i<36;i++){
+
+   html+=`
+   <div style="
+   height:42px;
+   border-radius:4px;
+   background:#f1f1f1;
+   border:1px solid #ddd;
+   "></div>
+   `;
+
+ }
+
+ $("board").innerHTML=html;
+
+}
+
+
+let playerIndex=0;
+
+const players=[
+ "Red",
+ "Green",
+ "Yellow",
+ "Blue"
+];
+
+
+function rollDice(){
+
+ const n=
+   Math.floor(Math.random()*6)+1;
+
+
+ $("dice").textContent=n;
+
+
+ if(n!==6){
+
+   playerIndex=
+     (playerIndex+1)%4;
+
+ }
+
+
+ $("currentPlayer").textContent=
+   players[playerIndex];
+
+
+ $("ludoMsg").textContent=
+   n===6
+   ?"6 मिला! फिर से roll करें।"
+   :p
